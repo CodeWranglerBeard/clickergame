@@ -67,12 +67,6 @@ interfaces.CFocusable = function()
                     console.log(this);
                 };
             }
-
-            this.bind("MouseDown", function(e)
-            {
-                this.getFocus();
-            });
-
         },
     });
 }();

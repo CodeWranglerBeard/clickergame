@@ -56,4 +56,26 @@ Crafty.defineScene("Login", function()
     buttonConfirm.z = z++;
     buttonConfirm.sprite.z = z++;
     buttonConfirm.textComp.z = z++;
+
+    this.bind("ButtonPressed", function(e) {
+        if (e != buttonConfirm) {
+            return;
+        }
+
+        buttonConfirm.enabled(false);
+
+        $.ajax({
+            url: "localhost:5000\\login.php",
+            data: {
+                Username: textFieldName.text(),
+                Password: textFieldPass.text()
+            },
+            success: function(result) {
+                Game.authToken = result.authToken;
+            },
+            complete: function(jqXHR, textStatus) {
+                buttonConfirm.enabled(true);
+            }
+        })
+    });
 });

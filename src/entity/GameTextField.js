@@ -40,6 +40,39 @@ Crafty.c("GameTextField",
         this.textMarkVisible = false;
 
         /**
+        * Gets or sets the entered text of the text field. 
+        * @param {String} newText - Optional: The text to pre-enter into the text field. 
+        * Not to be used for displaying a hint! Use the textHint property instead. 
+        */
+        this.text = function(text) {
+            if (typeof text !== 'undefined') {
+                this.textBehind = text;
+                this.updateShownText();
+            } else {
+                return this.textBehind;
+            }
+        }
+
+        // If false, will not accept user input. 
+        this._enabled = true;
+        /**
+        * Gets or sets whether to accept user input. 
+        * @param {Bool} enabled - Whether to accept user input. 
+        */
+        this.enabled = function(enabled) {
+            if (enabled) {
+                this._enabled = enabled;
+
+                if (!this._enabled) {
+                    this.loseFocus();
+                    this.textMarkVisible = false;
+                }
+            } else {
+                return this._enabled;
+            }
+        };
+
+        /**
         * Causes this ui element to lose focus. 
         */
         this.loseFocus = function() {
@@ -118,7 +151,7 @@ Crafty.c("GameTextField",
 
         this.bind("KeyDown", function(e) 
         {
-            if (this.hasFocus)
+            if (this._enabled && this.hasFocus)
             {
                 if (e.key == Crafty.keys.ESC) {
                     this.loseFocus();
@@ -141,11 +174,16 @@ Crafty.c("GameTextField",
             }
         });
 
+        this.bind("MouseDown", function(e)
+        {
+            this.getFocus();
+        });
+
         this.bind("EnterFrame", function(data)
         {
             this.textMarkDelta += data.dt;
 
-            if (this.hasFocus) {
+            if (this._enabled && this.hasFocus) {
                 if (this.textMarkDelta >= this.textMarkInterval) {
                     this.textMarkDelta = this.textMarkDelta % this.textMarkInterval;
                     this.textMarkVisible = !this.textMarkVisible;
