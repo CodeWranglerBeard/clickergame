@@ -5,16 +5,27 @@ Crafty.c("GameTextField",
 {
     init: function()
     {
-        this.requires("2D, DOM, Text, Mouse, Focusable");
-        this.attr({ w: 800, h: 20 });
-        this.textFont($text_css);
+        this.padding = 5;
+        this.textOffsetPercent = { w: 17, h: 20};
+
+        this.requires("CBase, Canvas, spr_textpanel, Mouse, CFocusable");
+        this.attr({ w: 310, h: 50 });
+
+        this.textComp = Crafty.e("CBase");
+        this.textComp.requires("DOM, Text");
+        this.textComp.textFont($text_css);
+        this.textComp.setInitOffset();
+        this.textComp.attr({ 
+            w: this.w - (this.padding * 2), 
+            h: this.h - (this.padding * 2)
+        });
 
         // If true, will receive user input. 
         this.hasFocus = false;
         // Default text to show if no text has been entered yet. 
         this.textHint = "Hier Eingeben";
         // The actually displayed text. Initialize with default. 
-        this.text(this.textHint);
+        this.textComp.text(this.textHint);
         // The text the user entered. 
         this.textBehind = "";
         // Maximum text length the user can enter. A value of 0 or less means infinite. Default 255. 
@@ -45,7 +56,7 @@ Crafty.c("GameTextField",
         * Causes this ui element to gain focus. 
         */
         this.getFocus = function() {
-            Crafty("Focusable").each(function() {
+            Crafty("CFocusable").each(function() {
                 this.loseFocus();
             });
 
@@ -77,14 +88,33 @@ Crafty.c("GameTextField",
             if (this.hasFocus && this.textMarkVisible) {
                 textToShow = textToShow + "|";
             }
-            this.text(textToShow);
+            this.textComp.text(textToShow);
         };
 
-        this.bind("MouseDown", function(e)
-        {
-            this.getFocus();
-            console.log("Switched focus");
-        });
+        /**
+        * Updates the location of this object. 
+        */
+        this.setLocation = function(x, y) {
+            this.attr({ x: x, y: y });
+            this.textComp.setLocation(
+                this.x + ((this.w / 100) * this.textOffsetPercent.w),
+                this.y + ((this.h / 100) * this.textOffsetPercent.h)
+            );
+        };
+
+        /**
+        * Updates the size of this object. 
+        */
+        this.setSize = function(w, h) {
+            this.attr({ 
+                w: (w * worldScale), 
+                h: (h * worldScale) 
+            });
+            this.textComp.setSize(
+                (this.w / 100) * this.textOffsetPercent.w,
+                (this.h / 100) * this.textOffsetPercent.h
+            );
+        };
 
         this.bind("KeyDown", function(e) 
         {

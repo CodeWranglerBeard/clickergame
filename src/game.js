@@ -28,7 +28,7 @@ Game = {
     {
         // Start crafty and set background color. 
         Crafty.init(WINDOW_WIDTH, WINDOW_HEIGHT);
-        Crafty.background("rgb(200, 200, 255)");
+        Crafty.background("#7c7c7c");
 
         // Enter loading scene. 
         Crafty.enterScene("Loading");

@@ -26,7 +26,7 @@ interfaces.CBase = function()
                 this.initOffset = { x: 0, y: 0 }; 
             }
 
-            if (typeof this.setPosition === 'undefined') {
+            if (typeof this.setLocation === 'undefined') {
                 /** 
                 * @desc Sets the absolute position coordinates of this object. 
                 * @memberof interfaces.CBase
@@ -34,12 +34,12 @@ interfaces.CBase = function()
                 * @param {Number} y - Y coordinate to position the object at. 
                 * @public
                 */
-                this.setPosition = function(x, y) {
+                this.setLocation = function(x, y) {
                     this.attr({ x: x, y: y });
                 };
             }
 
-            if (typeof this.setScale === 'undefined') {
+            if (typeof this.setSize === 'undefined') {
                 /** 
                 * @desc Overrides the scaling of this object. 
                 * Takes world scale into consideration. 
@@ -48,8 +48,8 @@ interfaces.CBase = function()
                 * @param {Number} h - Height to set for the object
                 * @public
                 */
-                this.setScale = function(w, h) {
-                    this.attr({ w: (w * worldScale) + 1, h: (h * worldScale) + 1 }); // plus 1 to stuff gaps between blocks. 
+                this.setSize = function(w, h) {
+                    this.attr({ w: (w * WORLD_SCALE) + 1, h: (h * WORLD_SCALE) + 1 }); // plus 1 to stuff gaps between blocks. 
                 };
             }
 
