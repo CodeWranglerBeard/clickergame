@@ -1,7 +1,7 @@
 /**
 * The loading scene that handles fetching all assets before the game starts. 
 */
-Crafty.defineScene("Loading", function() 
+Crafty.defineScene("Scene_Loading", function() 
 {
     var loadText = Crafty.e("GameText");
     loadText.text("Laden...");
@@ -24,8 +24,8 @@ Crafty.defineScene("Loading", function()
             "assets/sigil_tome.png",
             "assets/button_small_sheet.png",
             "assets/medium_dark_panel.png",
-            "assets/window_bottom.png",
-            "assets/window_middle.png",
+            "assets/window_full.png",
+            "assets/arrow_back.png",
         ], function() // Things to do after all files have been loaded
         {
     
@@ -78,15 +78,15 @@ Crafty.defineScene("Loading", function()
         Crafty.sprite(170, 110, "assets/medium_dark_panel.png", {
             spr_medium_dark_panel: [0, 0]
         });
-        // ---- window_bottom ---- //
-        Crafty.sprite(1000, 90, "assets/window_bottom.png", {
-            spr_window_bottom: [0, 0]
+        // ---- window_full ---- //
+        Crafty.sprite(370, 400, "assets/window_full.png", {
+            spr_window_full: [0, 0]
         });
-        // ---- window_middle ---- //
-        Crafty.sprite(1000, 380, "assets/window_middle.png", {
-            spr_window_middle: [0, 0]
+        // ---- arrow_back ---- //
+        Crafty.sprite(40, 22, "assets/arrow_back.png", {
+            spr_arrow_back: [0, 0]
         });
 
-        Crafty.enterScene("Login");
+        Crafty.enterScene("Scene_Login");
     });
 });

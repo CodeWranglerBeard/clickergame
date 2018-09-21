@@ -16,7 +16,7 @@ Crafty.c("GameButton",
         this.sprite.reel("Idle", 1000, 0, 1, 1);
         this.sprite.reel("Hover", 1000, 1, 0, 1);
         this.sprite.reel("Down", 1000, 0, 0, 1);
-        this.sprite.animate("Idle", 1);
+        this.sprite.animate("Idle");
 
         this.textComp = Crafty.e("CBase");
         this.textComp.requires("DOM, Text");
@@ -53,6 +53,26 @@ Crafty.c("GameButton",
             } else {
                 return this._enabled;
             }
+        };
+
+        // If not null or empty, the sprite to display as an icon in the center of the button. 
+        this._icon = undefined;
+        /**
+        * Sets the current icon to display, based on the given Crafty sprite object. 
+        * @param {Object} sprite - A Crafty sprite component name. If undefined, clears the current icon. 
+        */
+        this.setIcon = function(sprite) {
+            if (typeof sprite === 'undefined') {
+                this._icon.destroy();
+                this._icon = undefined;
+            }
+            if (typeof this._icon !== 'undefined') {
+                this._icon.destroy();
+                this._icon = undefined;
+            }
+
+            this._icon = Crafty.e("CBase, Canvas, " + sprite);
+            this.setCenteredOnSelf(this._icon);
         };
 
         /**
@@ -93,7 +113,6 @@ Crafty.c("GameButton",
         {
             if (this._enabled) {
                 this.getFocus();
-                this.press();
                 this.sprite.animate("Down");
             }
         });
@@ -102,8 +121,8 @@ Crafty.c("GameButton",
         {
             if (this._enabled) {
                 this.getFocus();
-                console.log("Switched focus");
                 this.sprite.animate("Hover");
+                this.press();
             }
         });
 

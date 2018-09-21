@@ -1,7 +1,7 @@
 /**
 * The game scene that handles all the active game logic. 
 */
-Crafty.defineScene("Game", function() 
+Crafty.defineScene("Scene_Game", function() 
 {
     this.showDebugDraw = false;
 

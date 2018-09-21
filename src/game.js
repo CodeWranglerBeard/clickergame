@@ -31,7 +31,7 @@ Game = {
         Crafty.background("#7c7c7c");
 
         // Enter loading scene. 
-        Crafty.enterScene("Loading");
+        Crafty.enterScene("Scene_Loading");
     },
     
     /**

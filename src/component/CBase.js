@@ -79,6 +79,19 @@ interfaces.CBase = function()
                     this.initOffset = { x: x, y: y };
                 };
             }
+
+            if (typeof this.setCenteredOnSelf === 'undefined') {
+                /** 
+                * @desc Centers the given object on this object. 
+                * @memberof interfaces.CBase
+                * @param {Object} obj - The object to center on this object. 
+                * @public
+                */
+                this.setCenteredOnSelf = function(obj) {
+                    obj.x = this.x + ((this.w - obj.w) / 2);
+                    obj.y = this.y + ((this.h - obj.h) / 2);
+                };
+            }
         },
     });
 }();
