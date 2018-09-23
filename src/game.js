@@ -6,8 +6,8 @@
  */
 
 /**** GLOBAL_CONSTANTS ****/
-var WINDOW_WIDTH = 1000;
-var WINDOW_HEIGHT = 580;
+var WINDOW_WIDTH = 450;
+var WINDOW_HEIGHT = 545;
     
 // Global var for scaling the game world, use steps of .1. 
 var WORLD_SCALE = 1.0;

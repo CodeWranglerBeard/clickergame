@@ -1,40 +1,37 @@
+var EInterpLocations = {
+    EInitial: 0,
+    EHover: 1,
+    EFull: 2
+};
+
 /**
-* Represents a button the user can click. 
+* Represents a panel that interpolates between two positions, based on whether the cursor hovers over it. 
 */
-Crafty.c("GameButton", 
+Crafty.c("GameInterpPanel", 
 {
     init: function()
     {
         this.textOffsetPercent = { w: 25, h: 20};
 
-        this.requires("CBase, Mouse, CFocusable");
-        this.attr({ w: 260, h: 70 });
+        this.requires("CBase, Mouse, spr_panel_plain");
+        this.attr({ w: 370, h: 545 });
 
-        this.sprite = Crafty.e("CBase");
-        this.sprite.requires("Canvas, SpriteAnimation, spr_button_small");
-        this.sprite.attr({ w: this.w, h: this.h });
-        this.sprite.reel("Idle", 1000, 0, 1, 1);
-        this.sprite.reel("Hover", 1000, 1, 0, 1);
-        this.sprite.reel("Down", 1000, 0, 0, 1);
-        this.sprite.animate("Idle");
+        this.spriteSmallPanel = Crafty.e("CBase");
+        this.spriteSmallPanel.requires("Canvas, SpriteAnimation, spr_small_side_panel_plain");
+        this.spriteSmallPanel.attr({ w: 144, h: 110 });
+        this.spriteSmallPanel.rotation = 90;
+        this.spriteSmallPanel.x = this.x - this.spriteSmallPanel.h;
+        this.spriteSmallPanel.y = this.y - this.spriteSmallPanel.w;
+        this.attach(this.spriteSmallPanel);
 
-        this.textComp = Crafty.e("CBase");
-        this.textComp.requires("DOM, Text");
-        this.textComp.textFont($text_css);
-        this.textComp.attr({w: this.w, h: this.h});
-
-        /**
-        * Gets or sets the text to display on the button. 
-        * @param {String} newText - Optional: The text to display on the button. 
-        */
-        this.text = function(text) {
-            if (typeof text !== 'undefined') {
-                this.textComp.text(text);
-            } else {
-                return this.textComp.text;
-            }
-        }
-        this.text("Klick' Mich");
+        // Sets what location to interpolate to. 
+        this.targetLocation = EInterpLocations.EInitial;
+        // The initial location to return to. 
+        this.initialLocation = { x: 0, y: 0 };
+        // The location to move to, when the panel is clicked. 
+        this.fullLocation = { x: 0, y: 0 };
+        // The location to move to, when the cursor hovers over this panel. 
+        this.hoverLocation = { x: 0, y: 0 };
 
         // If false, will not accept user input. 
         this._enabled = true;
@@ -48,7 +45,6 @@ Crafty.c("GameButton",
 
                 if (!this._enabled) {
                     this.loseFocus();
-                    this.sprite.animate("Idle", 1);
                 }
             } else {
                 return this._enabled;
@@ -73,6 +69,8 @@ Crafty.c("GameButton",
 
             this._icon = Crafty.e("CBase, Canvas, " + sprite);
             this.setCenteredOnSelf(this._icon);
+            this.spriteSmallPanel.setCenteredOnSelf(this._icon);
+            this.attach(this._icon);
         };
 
         /**
@@ -80,11 +78,6 @@ Crafty.c("GameButton",
         */
         this.setLocation = function(x, y) {
             this.attr({ x: x, y: y });
-            this.sprite.attr({ x: this.x, y: this.y });
-            this.textComp.setLocation(
-                this.x + ((this.w / 100) * this.textOffsetPercent.w),
-                this.y + ((this.h / 100) * this.textOffsetPercent.h)
-            );
         };
 
         /**
@@ -95,11 +88,6 @@ Crafty.c("GameButton",
                 w: (w * WORLD_SCALE), 
                 h: (h * WORLD_SCALE) 
             });
-            this.sprite.attr({ w: this.w, h: this.h });
-            this.textComp.setSize(
-                (this.w / 100) * this.textOffsetPercent.w,
-                (this.h / 100) * this.textOffsetPercent.h
-            );
         };
 
         /**
@@ -107,13 +95,20 @@ Crafty.c("GameButton",
         */
         this.press = function() {
             Crafty.trigger("ButtonPressed", this);
+
+            this.fullMove = !this.fullMove;
+
+            if (this.fullMove) {
+                this.targetLocation = EInterpLocations.EFull;
+            } else {
+                this.targetLocation = EInterpLocations.EHover;
+            }
         };
 
         this.bind("MouseDown", function(e)
         {
             if (this._enabled) {
                 this.getFocus();
-                this.sprite.animate("Down");
             }
         });
 
@@ -121,7 +116,6 @@ Crafty.c("GameButton",
         {
             if (this._enabled) {
                 this.getFocus();
-                this.sprite.animate("Hover");
                 this.press();
             }
         });
@@ -129,14 +123,18 @@ Crafty.c("GameButton",
         this.bind("MouseOver", function(e)
         {
             if (this._enabled) {
-                this.sprite.animate("Hover");
+                if (this.targetLocation != EInterpLocations.EFull) {
+                    this.targetLocation = EInterpLocations.EHover;
+                }
             }
         });
 
         this.bind("MouseOut", function(e)
         {
             if (this._enabled) {
-                this.sprite.animate("Idle");
+                if (this.targetLocation != EInterpLocations.EFull) {
+                    this.targetLocation = EInterpLocations.EInitial;
+                }
             }
         });
 
@@ -148,6 +146,21 @@ Crafty.c("GameButton",
                     this.press();
                 }
             }
+        });
+
+        this.bind("EnterFrame", function(data) {
+            var distDelta = {x: 0, y: 0};
+            var goalLocation = {x: 0, y: 0};
+
+            if (this.targetLocation == EInterpLocations.EInitial) {
+                goalLocation = this.initialLocation;
+            } else if (this.targetLocation == EInterpLocations.EHover) {
+                goalLocation = this.hoverLocation;
+            } else if (this.targetLocation == EInterpLocations.EFull) {
+                goalLocation = this.fullLocation;
+            } 
+            distDelta.x = goalLocation.x - this.x;
+            distDelta.y = goalLocation.y - this.y;
         });
     },
 });

@@ -26,6 +26,9 @@ Crafty.defineScene("Scene_Loading", function()
             "assets/medium_dark_panel.png",
             "assets/window_full.png",
             "assets/arrow_back.png",
+            "assets/small_side_panel_plain.png",
+            "assets/small_side_panel_sheet.png",
+            "assets/button_mini_sheet.png",
         ], function() // Things to do after all files have been loaded
         {
     
@@ -85,6 +88,18 @@ Crafty.defineScene("Scene_Loading", function()
         // ---- arrow_back ---- //
         Crafty.sprite(40, 22, "assets/arrow_back.png", {
             spr_arrow_back: [0, 0]
+        });
+        // ---- small_side_panel_plain ---- //
+        Crafty.sprite(144, 110, "assets/small_side_panel_plain.png", {
+            spr_small_side_panel_plain: [0, 0]
+        });
+        // ---- small_side_panel_sheet ---- //
+        Crafty.sprite(36, 28, "assets/small_side_panel_sheet.png", {
+            spr_small_side_panel_sheet: [0, 0]
+        });
+        // ---- button_mini_sheet ---- //
+        Crafty.sprite(144, 110, "assets/button_mini_sheet.png", {
+            spr_button_mini_sheet: [0, 0]
         });
 
         Crafty.enterScene("Scene_Login");
