@@ -10,13 +10,15 @@ interfaces.CDebug = function()
     Crafty.c("CDebug", 
     {
         init: function() {
-            /** 
-            * @desc Array for debug draw objects. 
-            * @memberof interfaces.CDebug
-            * @private
-            */
-            this.lDebugDraw = [];
-
+            if (typeof this.lDebugDraw === 'undefined') {
+                /** 
+                * @desc Array for debug draw objects. 
+                * @memberof interfaces.CDebug
+                * @private
+                */
+                this.lDebugDraw = [];
+            }
+        
             if (typeof this.showDebugDraw === 'undefined') {
                 /** 
                 * @desc Draws in the bounds of this object. 

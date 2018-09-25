@@ -1,4 +1,3 @@
-// Include namespaces. 
 var interfaces = interfaces || {}; 
 
 /**
@@ -11,32 +10,42 @@ interfaces.CMortal = function()
     {
         init: function() 
         {
-            /**
-            * @desc If true, the entity can not die. 
-            * @memberof interfaces.CMortal
-            * @public
-            */
-            this.isImmortal = false;
-            /**
-            * @desc Maximum health the entity can have. 
-            * @memberof interfaces.CMortal
-            * @public 
-            */
-            this.healthMax = 1;
-            /**
-            * @desc Amount of remaining health. 
-            * @memberof interfaces.CMortal
-            * @private
-            */
-            this.health = 1;
-            /**
-            * @desc Becomes true upon death. 
-            * @memberof interfaces.CMortal
-            * @private
-            */
-            this.isDead = false;
+            if (typeof this.isImmortal === 'undefined') {
+                /**
+                * @desc If true, the entity can not die. 
+                * @memberof interfaces.CMortal
+                * @public
+                */
+                this.isImmortal = false;
+            }
 
-            // Provide die function, if it isn't alrady defined. 
+            if (typeof this.healthMax === 'undefined') {
+                /**
+                * @desc Maximum health the entity can have. 
+                * @memberof interfaces.CMortal
+                * @public 
+                */
+                this.healthMax = 1;
+            }
+
+            if (typeof this.health === 'undefined') {
+                /**
+                * @desc Amount of remaining health. 
+                * @memberof interfaces.CMortal
+                * @private
+                */
+                this.health = 1;
+            }
+
+            if (typeof this.isDead === 'undefined') {
+                /**
+                * @desc Becomes true upon death. 
+                * @memberof interfaces.CMortal
+                * @private
+                */
+                this.isDead = false;
+            }
+
             if (typeof this.die === 'undefined') {
                 /**
                 * @desc Makes the entity expire. 
@@ -50,32 +59,38 @@ interfaces.CMortal = function()
                     }
                 };
             }
-        },
 
-        /**
-        * @desc Overrides the entity's current health. Can not be more than the maximum. 
-        * @memberof interfaces.CMortal
-        * @param {Number} healthIn - The health to set. 
-        * @public
-        */
-        setHealth: function(healthIn) {
-            if (healthIn <= this.healthMax)
-                this.health = healthIn;
-            else
-                this.health = this.healthMax;
-        },
+            if (typeof this.setHealth === 'undefined') {
+                /**
+                * @desc Overrides the entity's current health. Can not be more than the maximum. 
+                * @memberof interfaces.CMortal
+                * @param {Number} health - The health to set. 
+                * @public
+                */
+                this.setHealth = function(health) {
+                    if (health <= this.healthMax) {
+                        this.health = health;
+                    } else {
+                        this.health = this.healthMax;
+                    }
+                };
+            }
 
-        /**
-        * @desc Applies damage to an entity's health. 
-        * @memberof interfaces.CMortal
-        * @param {Number} damageIn - The amount of damage to apply. 
-        * @public
-        */
-        applyDamage: function(damageIn) {
-            this.health -= damageIn;
+            if (typeof this.applyDamage === 'undefined') {
+                /**
+                * @desc Applies damage to an entity's health. 
+                * @memberof interfaces.CMortal
+                * @param {Number} damage - The amount of damage to apply. 
+                * @public
+                */
+                this.applyDamage = function(damage) {
+                    this.health -= damage;
 
-            if (this.health <= 0)
-                this.die();
+                    if (this.health <= 0) {
+                        this.die();
+                    }
+                };
+            }
         },
     });
 }();

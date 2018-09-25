@@ -1,4 +1,3 @@
-// Include namespaces. 
 var interfaces = interfaces || {}; 
 
 /**
@@ -11,13 +10,15 @@ interfaces.CReset = function()
     {
         init: function() 
         {
-            /**
-            * @desc Position to place the object at when it is reset. 
-            * @memberof interfaces.CReset
-            * @private
-            */
-            this.resetPos = { x: 0, y: 0 };
-
+            if (typeof this.resetPos === 'undefined') {
+                /**
+                * @desc Position to place the object at when it is reset. 
+                * @memberof interfaces.CReset
+                * @private
+                */
+                this.resetPos = { x: 0, y: 0 };
+            }
+        
             if (typeof this.reset === 'undefined') {
                 /**
                 * @desc Resets the entity. 
