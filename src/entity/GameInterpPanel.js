@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 /**
 * Enum for interpolation locations. 
 */
+=======
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
 var EInterpLocations = {
     EInitial: 0,
     EHover: 1,
@@ -14,6 +17,7 @@ Crafty.c("GameInterpPanel",
 {
     init: function()
     {
+<<<<<<< HEAD
         this.requires("CBase, Mouse, CFocusable, Canvas, spr_panel_plain");
         this.attr({ w: 370, h: 545 });
 
@@ -31,6 +35,23 @@ Crafty.c("GameInterpPanel",
 
         // Sets what location to interpolate to. 
         this.interpTarget = EInterpLocations.EInitial;
+=======
+        this.textOffsetPercent = { w: 25, h: 20};
+
+        this.requires("CBase, Mouse, spr_panel_plain");
+        this.attr({ w: 370, h: 545 });
+
+        this.spriteSmallPanel = Crafty.e("CBase");
+        this.spriteSmallPanel.requires("Canvas, SpriteAnimation, spr_small_side_panel_plain");
+        this.spriteSmallPanel.attr({ w: 144, h: 110 });
+        this.spriteSmallPanel.rotation = 90;
+        this.spriteSmallPanel.x = this.x - this.spriteSmallPanel.h;
+        this.spriteSmallPanel.y = this.y - this.spriteSmallPanel.w;
+        this.attach(this.spriteSmallPanel);
+
+        // Sets what location to interpolate to. 
+        this.targetLocation = EInterpLocations.EInitial;
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
         // The initial location to return to. 
         this.initialLocation = { x: 0, y: 0 };
         // The location to move to, when the panel is clicked. 
@@ -56,14 +77,42 @@ Crafty.c("GameInterpPanel",
             }
         };
 
+<<<<<<< HEAD
+=======
+        // If not null or empty, the sprite to display as an icon in the center of the button. 
+        this._icon = undefined;
+        /**
+        * Sets the current icon to display, based on the given Crafty sprite object. 
+        * @param {Object} sprite - A Crafty sprite component name. If undefined, clears the current icon. 
+        */
+        this.setIcon = function(sprite) {
+            if (typeof sprite === 'undefined') {
+                this._icon.destroy();
+                this._icon = undefined;
+            }
+            if (typeof this._icon !== 'undefined') {
+                this._icon.destroy();
+                this._icon = undefined;
+            }
+
+            this._icon = Crafty.e("CBase, Canvas, " + sprite);
+            this.setCenteredOnSelf(this._icon);
+            this.spriteSmallPanel.setCenteredOnSelf(this._icon);
+            this.attach(this._icon);
+        };
+
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
         /**
         * Updates the location of this object. 
         */
         this.setLocation = function(x, y) {
             this.attr({ x: x, y: y });
+<<<<<<< HEAD
             this.initialLocation = { x: x, y: y };
             this.fullLocation = { x: x, y: y };
             this.hoverLocation = { x: x, y: y };
+=======
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
         };
 
         /**
@@ -77,6 +126,7 @@ Crafty.c("GameInterpPanel",
         };
 
         /**
+<<<<<<< HEAD
         * Sets the z index of this object and its child objects, based on the given z index. 
         * @returns The z index of the last set child object. 
         */
@@ -109,6 +159,8 @@ Crafty.c("GameInterpPanel",
         };
 
         /**
+=======
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
         * Causes all button listeners to be notified that this button was pressed. 
         */
         this.press = function() {
@@ -117,9 +169,15 @@ Crafty.c("GameInterpPanel",
             this.fullMove = !this.fullMove;
 
             if (this.fullMove) {
+<<<<<<< HEAD
                 this.interpTarget = EInterpLocations.EFull;
             } else {
                 this.interpTarget = EInterpLocations.EHover;
+=======
+                this.targetLocation = EInterpLocations.EFull;
+            } else {
+                this.targetLocation = EInterpLocations.EHover;
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
             }
         };
 
@@ -130,6 +188,7 @@ Crafty.c("GameInterpPanel",
             }
         });
 
+<<<<<<< HEAD
         this.spriteSmallPanel.bind("MouseDown", function(e)
         {
             if (this.parent._enabled) {
@@ -137,6 +196,8 @@ Crafty.c("GameInterpPanel",
             }
         });
 
+=======
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
         this.bind("MouseUp", function(e)
         {
             if (this._enabled) {
@@ -145,6 +206,7 @@ Crafty.c("GameInterpPanel",
             }
         });
 
+<<<<<<< HEAD
         this.spriteSmallPanel.bind("MouseUp", function(e)
         {
             if (this.parent._enabled) {
@@ -167,6 +229,13 @@ Crafty.c("GameInterpPanel",
             if (this.parent._enabled) {
                 if (this.parent.interpTarget != EInterpLocations.EFull) {
                     this.parent.interpTarget = EInterpLocations.EHover;
+=======
+        this.bind("MouseOver", function(e)
+        {
+            if (this._enabled) {
+                if (this.targetLocation != EInterpLocations.EFull) {
+                    this.targetLocation = EInterpLocations.EHover;
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
                 }
             }
         });
@@ -174,6 +243,7 @@ Crafty.c("GameInterpPanel",
         this.bind("MouseOut", function(e)
         {
             if (this._enabled) {
+<<<<<<< HEAD
                 if (this.interpTarget != EInterpLocations.EFull) {
                     this.interpTarget = EInterpLocations.EInitial;
                 }
@@ -185,6 +255,10 @@ Crafty.c("GameInterpPanel",
             if (this.parent._enabled) {
                 if (this.parent.interpTarget != EInterpLocations.EFull) {
                     this.parent.interpTarget = EInterpLocations.EInitial;
+=======
+                if (this.targetLocation != EInterpLocations.EFull) {
+                    this.targetLocation = EInterpLocations.EInitial;
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
                 }
             }
         });
@@ -199,6 +273,7 @@ Crafty.c("GameInterpPanel",
             }
         });
 
+<<<<<<< HEAD
         this.spriteSmallPanel.bind("KeyDown", function(e) 
         {
             if (this.parent._enabled && this.parent.hasFocus)
@@ -209,22 +284,35 @@ Crafty.c("GameInterpPanel",
             }
         });
 
+=======
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
         this.bind("EnterFrame", function(data) {
             var distDelta = {x: 0, y: 0};
             var goalLocation = {x: 0, y: 0};
 
+<<<<<<< HEAD
             if (this.interpTarget == EInterpLocations.EInitial) {
                 goalLocation = this.initialLocation;
             } else if (this.interpTarget == EInterpLocations.EHover) {
                 goalLocation = this.hoverLocation;
             } else if (this.interpTarget == EInterpLocations.EFull) {
+=======
+            if (this.targetLocation == EInterpLocations.EInitial) {
+                goalLocation = this.initialLocation;
+            } else if (this.targetLocation == EInterpLocations.EHover) {
+                goalLocation = this.hoverLocation;
+            } else if (this.targetLocation == EInterpLocations.EFull) {
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
                 goalLocation = this.fullLocation;
             } 
             distDelta.x = goalLocation.x - this.x;
             distDelta.y = goalLocation.y - this.y;
+<<<<<<< HEAD
 
             this.x += distDelta.x / Math.pow(2, 2);
             this.y += distDelta.y / Math.pow(2, 2);
+=======
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
         });
     },
 });

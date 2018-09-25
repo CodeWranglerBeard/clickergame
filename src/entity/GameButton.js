@@ -6,7 +6,11 @@ Crafty.c("GameButton",
 {
     init: function()
     {
+<<<<<<< HEAD
         this.textOffsetMult = { w: 0.25, h: 0.2};
+=======
+        this.textOffsetPercent = { w: 25, h: 20};
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
 
         this.requires("CBase, Mouse, CFocusable");
         this.attr({ w: 260, h: 70 });
@@ -18,7 +22,10 @@ Crafty.c("GameButton",
         this.sprite.reel("Hover", 1000, 1, 0, 1);
         this.sprite.reel("Down", 1000, 0, 0, 1);
         this.sprite.animate("Idle");
+<<<<<<< HEAD
         this.attach(this.sprite);
+=======
+>>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
 
         this.textComp = Crafty.e("CBase");
         this.textComp.requires("DOM, Text");
@@ -61,6 +68,26 @@ Crafty.c("GameButton",
             } else {
                 return this._enabled;
             }
+        };
+
+        // If not null or empty, the sprite to display as an icon in the center of the button. 
+        this._icon = undefined;
+        /**
+        * Sets the current icon to display, based on the given Crafty sprite object. 
+        * @param {Object} sprite - A Crafty sprite component name. If undefined, clears the current icon. 
+        */
+        this.setIcon = function(sprite) {
+            if (typeof sprite === 'undefined') {
+                this._icon.destroy();
+                this._icon = undefined;
+            }
+            if (typeof this._icon !== 'undefined') {
+                this._icon.destroy();
+                this._icon = undefined;
+            }
+
+            this._icon = Crafty.e("CBase, Canvas, " + sprite);
+            this.setCenteredOnSelf(this._icon);
         };
 
         /**
