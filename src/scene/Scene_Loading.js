@@ -94,19 +94,11 @@ Crafty.defineScene("Scene_Loading", function()
             spr_small_side_panel_plain: [0, 0]
         });
         // ---- small_side_panel_sheet ---- //
-<<<<<<< HEAD:src/scene/Scene_Loading.js
         Crafty.sprite(144, 110, "assets/small_side_panel_sheet.png", {
             spr_small_side_panel_sheet: [0, 0]
         });
         // ---- button_mini_sheet ---- //
         Crafty.sprite(36, 28, "assets/button_mini_sheet.png", {
-=======
-        Crafty.sprite(36, 28, "assets/small_side_panel_sheet.png", {
-            spr_small_side_panel_sheet: [0, 0]
-        });
-        // ---- button_mini_sheet ---- //
-        Crafty.sprite(144, 110, "assets/button_mini_sheet.png", {
->>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85:src/scene/Scene_Loading.js
             spr_button_mini_sheet: [0, 0]
         });
 

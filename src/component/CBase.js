@@ -92,7 +92,6 @@ interfaces.CBase = function()
                     obj.y = this.y + ((this.h - obj.h) / 2);
                 };
             }
-<<<<<<< HEAD
 
             if (typeof this.setZ === 'undefined') {
                 /**
@@ -108,8 +107,6 @@ interfaces.CBase = function()
                     return z;
                 };
             };
-=======
->>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85
         },
     });
 }();

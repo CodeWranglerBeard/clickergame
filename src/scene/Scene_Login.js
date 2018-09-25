@@ -97,13 +97,7 @@ Crafty.defineScene("Scene_Login", function()
         buttonConfirm.y - buttonConfirm.h - margin
     );
     buttonRegister.text("Registrieren");
-<<<<<<< HEAD:src/scene/Scene_Login.js
     z = buttonRegister.setZ(z);
-=======
-    buttonRegister.z = z++;
-    buttonRegister.sprite.z = z++;
-    buttonRegister.textComp.z = z++;
->>>>>>> 00255a83d40ab5adc15cfed03689a1f96a9bbe85:src/scene/Scene_Login.js
 
     this.bind("ButtonPressed", function(e) {
         if (e != buttonRegister) {
