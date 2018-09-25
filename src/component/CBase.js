@@ -79,6 +79,34 @@ interfaces.CBase = function()
                     this.initOffset = { x: x, y: y };
                 };
             }
+
+            if (typeof this.setCenteredOnSelf === 'undefined') {
+                /** 
+                * @desc Centers the given object on this object. 
+                * @memberof interfaces.CBase
+                * @param {Object} obj - The object to center on this object. 
+                * @public
+                */
+                this.setCenteredOnSelf = function(obj) {
+                    obj.x = this.x + ((this.w - obj.w) / 2);
+                    obj.y = this.y + ((this.h - obj.h) / 2);
+                };
+            }
+
+            if (typeof this.setZ === 'undefined') {
+                /**
+                * @desc Sets the z index of this object. 
+                * @memberof interfaces.CBase
+                * @param {int} z - The index to set. 
+                * @public
+                * @returns The z index of the last object set. 
+                */
+                this.setZ = function(z) {
+                    this.z = z++;
+
+                    return z;
+                };
+            };
         },
     });
 }();

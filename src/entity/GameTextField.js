@@ -149,6 +149,17 @@ Crafty.c("GameTextField",
             );
         };
 
+        /**
+        * Sets the z index of this object and its child objects, based on the given z index. 
+        * @returns The z index of the last set child object. 
+        */
+        this.setZ = function(z) {
+            this.z = z++;
+            this.textComp.z = z++;
+
+            return z;
+        }
+
         this.bind("KeyDown", function(e) 
         {
             if (this._enabled && this.hasFocus)
