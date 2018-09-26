@@ -12,9 +12,9 @@ Crafty.c("GameButtonMini",
         this.sprite = Crafty.e("CBase");
         this.sprite.requires("Canvas, SpriteAnimation, spr_button_mini_sheet");
         this.sprite.attr({ w: this.w, h: this.h });
-        this.sprite.reel("Idle", 1000, 0, 1, 1);
+        this.sprite.reel("Idle", 1000, 0, 0, 1);
         this.sprite.reel("Hover", 1000, 1, 0, 1);
-        this.sprite.reel("Down", 1000, 0, 0, 1);
+        this.sprite.reel("Down", 1000, 0, 1, 1);
         this.sprite.animate("Idle");
         this.attach(this.sprite);
 

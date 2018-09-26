@@ -36,7 +36,6 @@ interfaces.CMortal = function()
             */
             this.isDead = false;
 
-            // Provide die function, if it isn't alrady defined. 
             if (typeof this.die === 'undefined') {
                 /**
                 * @desc Makes the entity expire. 
@@ -47,35 +46,64 @@ interfaces.CMortal = function()
                     if (this.isImmortal == false) {
                         this.destroy();
                         this.isDead = true;
+                        Crafty.trigger("OnDeath", this);
                     }
                 };
             }
-        },
 
-        /**
-        * @desc Overrides the entity's current health. Can not be more than the maximum. 
-        * @memberof interfaces.CMortal
-        * @param {Number} healthIn - The health to set. 
-        * @public
-        */
-        setHealth: function(healthIn) {
-            if (healthIn <= this.healthMax)
-                this.health = healthIn;
-            else
-                this.health = this.healthMax;
-        },
+            if (typeof this.setHealth === 'undefined') {
+                /**
+                * @desc Overrides the entity's current health. 
+                * Clamps to a range from 1 to maxHealth. 
+                * @memberof interfaces.CMortal
+                * @param {Number} health - The health to set. 
+                * @public
+                */
+                this.setHealth = function(health) {
+                    if (health < 1) {
+                        this.health = 1;
+                    } else if (health <= this.healthMax) {
+                        this.health = health;
+                    } else {
+                        this.health = this.healthMax;
+                    }
+                };
+            }
 
-        /**
-        * @desc Applies damage to an entity's health. 
-        * @memberof interfaces.CMortal
-        * @param {Number} damageIn - The amount of damage to apply. 
-        * @public
-        */
-        applyDamage: function(damageIn) {
-            this.health -= damageIn;
+            if (typeof this.setHealthMax === 'undefined') {
+                /**
+                * @desc Overrides the entity's maximum and current health. 
+                * Clamps to 1, if the given value is less than 1. 
+                * @memberof interfaces.CMortal
+                * @param {Number} health - The health to set. 
+                * @public
+                */
+                this.setHealthMax = function(health) {
+                    if (health < 1) {
+                        this.healthMax = 1;
+                    } else {
+                        this.healthMax = health;
+                    }
+                    this.health = this.healthMax;
+                };
+            }
 
-            if (this.health <= 0)
-                this.die();
+            if (typeof this.applyDamage === 'undefined') {
+                /**
+                * @desc Applies damage to an entity's health. 
+                * Negative numbers can heal. 
+                * @memberof interfaces.CMortal
+                * @param {Number} damage - The amount of damage to apply. 
+                * @public
+                */
+                this.applyDamage = function(damage) {
+                    this.health -= damage;
+
+                    if (this.health <= 0) {
+                        this.die();
+                    }
+                };
+            }
         },
     });
 }();

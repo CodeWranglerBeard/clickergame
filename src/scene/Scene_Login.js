@@ -69,24 +69,20 @@ Crafty.defineScene("Scene_Login", function()
         }
 
         buttonConfirm.enabled(false);
-
-        $.ajax({
-            url: "localhost:80\\login.php",
-            data: {
-                "Username": "\"" + textFieldName.text() + "\"",
-                "Password": "\"" + textFieldPass.text() + "\""
-            },
-            success: function(result) {
-                Game.authToken = result.authToken;
-            },
-            complete: function(jqXHR, textStatus) {
+        Game.login(
+            textFieldName.text(),
+            textFieldPass.text(),
+            function(data) {
                 buttonConfirm.enabled(true);
-                Crafty.enterScene("Scene_Game");
-            },
-            fail: function() {
-                console.error("Failed to get authToken");
+                if (data.status == "success") {
+                    window.alert("Erfolgreich angemeldet");
+                    // TODO: Show loading notification. 
+                    Game.loadGame(Game.authToken, function(data) {
+                        Crafty.enterScene("Scene_Game");
+                    });
+                }
             }
-        });
+        );
     });
 
     // Register

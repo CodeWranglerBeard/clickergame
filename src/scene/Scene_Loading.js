@@ -101,7 +101,15 @@ Crafty.defineScene("Scene_Loading", function()
         Crafty.sprite(36, 28, "assets/button_mini_sheet.png", {
             spr_button_mini_sheet: [0, 0]
         });
+        // ---- enemy ---- //
+        Crafty.sprite(300, 426, "assets/enemy.png", {
+            spr_enemy: [0, 0]
+        });
 
-        Crafty.enterScene("Scene_Login");
+        if (DEBUG) {
+            Crafty.enterScene("Scene_Game");
+        } else {
+            Crafty.enterScene("Scene_Login");
+        }
     });
 });

@@ -10,7 +10,6 @@ Crafty.defineScene("Scene_Register", function()
     var z = 1;
     var y = 20;
     var margin = 15;
-    var registrationSuccess = false; // Is true, if the registration succeeded at any point. 
 
     /**********
     * UI_ELEMENTS
@@ -66,6 +65,15 @@ Crafty.defineScene("Scene_Register", function()
     textFieldPassConfirm.textMax = 20;
     z = textFieldPassConfirm.setZ(z);
 
+    textFieldPassConfirm.bind("KeyDown", function(e) 
+    {
+        if (textFieldPass.text() == textFieldPassConfirm.text()) {
+            buttonConfirm.enabled(true);
+        } else {
+            buttonConfirm.enabled(false);
+        }
+    });
+
     // Confirm
     var buttonConfirm = Crafty.e("GameButton");
     buttonConfirm.setSize(280, 50);
@@ -75,6 +83,7 @@ Crafty.defineScene("Scene_Register", function()
     );
     buttonConfirm.text("Registrieren");
     z = buttonConfirm.setZ(z);
+    buttonConfirm.enabled(false);
 
     this.bind("ButtonPressed", function(e) {
         if (e != buttonConfirm) {
@@ -82,26 +91,21 @@ Crafty.defineScene("Scene_Register", function()
         }
 
         buttonConfirm.enabled(false);
-
-        $.ajax({
-            url: "localhost:80\\register.php",
-            data: {
-                Username: textFieldName.text(),
-                Password: textFieldPass.text()
-            },
-            success: function(result) {
-                registrationSuccess = true;
-                buttonConfirm.enabled(false);
-                console.info("Got authToken");
-                Crafty.enterScene("Scene_Login");
-            },
-            complete: function(jqXHR, textStatus) {
-                buttonConfirm.enabled(true);
-            },
-            fail: function() {
-                console.error("Failed to register");
+        Game.register(
+            textFieldName.text(),
+            textFieldPass.text(),
+            function(data) {
+                if (data.status == "success") {
+                    window.alert("Erfolgreich registriert");
+                    Crafty.enterScene("Scene_Login");
+                } else {
+                    textFieldName.text("");
+                    textFieldPass.text("");
+                    textFieldPassConfirm.text("");
+                    buttonConfirm.enabled(true);
+                }
             }
-        });
+        );
     });
 
     // Back to login

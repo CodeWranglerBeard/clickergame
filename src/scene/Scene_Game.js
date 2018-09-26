@@ -46,7 +46,6 @@ Crafty.defineScene("Scene_Game", function()
         panelEnemy.x + panelEnemy.w - buttonBackToLogin.w, 
         panelEnemy.y
     );
-    // buttonBackToLogin.text("Logout");
     z = buttonBackToLogin.setZ(z);
 
     this.bind("ButtonPressed", function(e) {
@@ -70,20 +69,16 @@ Crafty.defineScene("Scene_Game", function()
         y: panelStore.initialLocation.y 
     };
 
-
-    // this.bind("KeyDown", function(e) 
-    // {
-    //     if (e.key == Crafty.keys.T)
-    //     {
-    //         if (this.showDebugDraw) {
-    //             Crafty("IDebug").each(function() {
-    //                 this.hideDebugDraw();
-    //             });
-    //         } else {
-    //             Crafty("IDebug").each(function() {
-    //                 this.showDebugDraw();
-    //             });
-    //         }
-    //     }
-    // });
+    if (DEBUG) {
+        Game.advanceEnemy(function(data) { 
+            var currentEnemy = Crafty.e("Enemy");
+            currentEnemy.setHealthMax(Game.currentEnemy.health);
+            currentEnemy.goldValue = Game.currentEnemy.value;
+            currentEnemy.setSprite(Game.currentEnemy.sprite);
+            currentEnemy.type = Game.currentEnemy.type;
+            currentEnemy.name = Game.currentEnemy.name;
+            currentEnemy.attr({ w: 300, h: 426 });
+            currentEnemy.z = 5000;
+        });
+    }
 });
