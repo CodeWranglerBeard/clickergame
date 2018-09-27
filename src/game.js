@@ -15,6 +15,16 @@ var DEBUG = true;
 */
 Game = {
 
+    // Constants
+    ENEMY_HEALTH_MULTIPLIER: 0.05,
+    ENEMY_VALUE_MULTIPLIER: 0.1,
+    ENEMY_HEALTH_MULTIPLIER_MINIBOSS: 0.75,
+    ENEMY_VALUE_MULTIPLIER_MINIBOSS: 0.3,
+    ENEMY_HEALTH_MULTIPLIER_FINALBOSS: 1.15,
+    ENEMY_VALUE_MULTIPLIER_FINALBOSS: 0.8,
+    ADDON_HEALTH_MULTIPLIER: 0.45,
+    ADDON_VALUE_MULTIPLIER: 0.35,
+
     // Authentification token to send along with requests to the back-end. 
     authToken: null,
 
@@ -159,7 +169,7 @@ Game = {
         Game.currentLevel = data.level;
         Game.currentAddon = data.addon;
         Game.currentEnemy = data.enemy;
-        Game.nextEnemy = data.enemyNext;
+        Game.nextEnemy = data.nextEnemy;
 
         for (var i = 0; i < data.companions.length; i++) {
             Game.companions.push(data.companions[i]);
@@ -231,22 +241,29 @@ Game = {
     */
     getNewEnemy: function(callback)
     {
-        var enemyType = EEnemyTypes.Normal;
-        var enemyHealthMult = 0.05;
-        var enemyValueMult = 0.1;
+        var level = this.currentLevel + 1;                      // Get next enemy for next level. 
+        var addon = this.currentAddon;                          // Current addon number. 
+        var levelsAddon = this.addons[this.currentAddon - 1];   // Number of levels for current addon. 
 
-        if ((this.currentLevel + 1) % 10 == 0) { // Mini boss level. 
-            enemyType = EEnemyTypes.MiniBoss;
-        } else if ((this.currentLevel + 1) >= this.addons[this.currentAddon - 1]) { // Final level of addon. 
+        var enemyType = EEnemyTypes.Normal;
+        var enemyHealthMult = Game.ENEMY_HEALTH_MULTIPLIER;
+        var enemyValueMult = Game.ENEMY_VALUE_MULTIPLIER;
+
+        if (level > levelsAddon) {
+            addon++;
+            level = 1;
+        } else if (level == levelsAddon) { // Final level of addon. 
             enemyType = EEnemyTypes.FinalBoss;
+        } else if (level % 10 == 0) { // Mini boss level. 
+            enemyType = EEnemyTypes.MiniBoss;
         }
 
         if (enemyType == EEnemyTypes.MiniBoss) {
-            enemyHealthMult = 0.75;
-            enemyValueMult = 0.3;
+            enemyHealthMult = Game.ENEMY_HEALTH_MULTIPLIER_MINIBOSS;
+            enemyValueMult = Game.ENEMY_VALUE_MULTIPLIER_MINIBOSS;
         } else if (enemyType == EEnemyTypes.FinalBoss) {
-            enemyHealthMult = 1.15;
-            enemyValueMult = 0.8;
+            enemyHealthMult = Game.ENEMY_HEALTH_MULTIPLIER_FINALBOSS;
+            enemyValueMult = Game.ENEMY_VALUE_MULTIPLIER_FINALBOSS;
         }
 
         $.ajax({
@@ -265,8 +282,8 @@ Game = {
                 var sprite = "spr_enemy"; // TODO: Request from backend. 
                 var name = "Bob"; // TODO: Request from backend. 
 
-                enemyHealth = (enemyHealth * (1 + (enemyHealthMult * this.currentLevel) + ((0.45 + enemyHealthMult) * (this.currentAddon - 1))));
-                enemyValue = enemyValue * (1 + (enemyValueMult * this.currentLevel) * ((0.35 + enemyValueMult) * (this.currentAddon - 1)));
+                enemyHealth = (enemyHealth * (1 + (enemyHealthMult * this.currentLevel) + (Game.ADDON_HEALTH_MULTIPLIER * (addon - 1))));
+                enemyValue = enemyValue * (1 + (enemyValueMult * this.currentLevel) + (Game.ADDON_VALUE_MULTIPLIER * (addon - 1)));
                 enemyHealth = Math.round(enemyHealth);
                 enemyValue = Math.round(enemyValue);
                 this.nextEnemy = { 
@@ -283,7 +300,7 @@ Game = {
             fail: function() {
                 console.error("getNewEnemy: Request failed!");
             }
-        });        
+        });
     },
 
     /**

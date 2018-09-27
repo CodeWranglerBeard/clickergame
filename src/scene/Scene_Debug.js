@@ -18,31 +18,38 @@ Crafty.defineScene("Scene_Debug", function()
     Game.getNewEnemy = function(callback)
     {
         console.log("Debug getNewEnemy");
-        var enemyType = EEnemyTypes.Normal;
-        var enemyHealthMult = 0.05;
-        var enemyValueMult = 0.1;
+        var level = this.currentLevel + 1;                      // Get next enemy for next level. 
+        var addon = this.currentAddon;                          // Current addon number. 
+        var levelsAddon = this.addons[this.currentAddon - 1];   // Number of levels for current addon. 
 
-        if ((this.currentLevel + 1) % 10 == 0) { // Mini boss level. 
-            enemyType = EEnemyTypes.MiniBoss;
-        } else if ((this.currentLevel + 1) >= this.addons[this.currentAddon - 1]) { // Final level of addon. 
+        var enemyType = EEnemyTypes.Normal;
+        var enemyHealthMult = Game.ENEMY_HEALTH_MULTIPLIER;
+        var enemyValueMult = Game.ENEMY_VALUE_MULTIPLIER;
+
+        if (level > levelsAddon) {
+            addon++;
+            level = 1;
+        } else if (level == levelsAddon) { // Final level of addon. 
             enemyType = EEnemyTypes.FinalBoss;
+        } else if (level % 10 == 0) { // Mini boss level. 
+            enemyType = EEnemyTypes.MiniBoss;
         }
 
         if (enemyType == EEnemyTypes.MiniBoss) {
-            enemyHealthMult = 0.75;
-            enemyValueMult = 0.3;
+            enemyHealthMult = Game.ENEMY_HEALTH_MULTIPLIER_MINIBOSS;
+            enemyValueMult = Game.ENEMY_VALUE_MULTIPLIER_MINIBOSS;
         } else if (enemyType == EEnemyTypes.FinalBoss) {
-            enemyHealthMult = 1.15;
-            enemyValueMult = 0.8;
+            enemyHealthMult = Game.ENEMY_HEALTH_MULTIPLIER_FINALBOSS;
+            enemyValueMult = Game.ENEMY_VALUE_MULTIPLIER_FINALBOSS;
         }
 
-        var enemyHealth = 100;
-        var enemyValue = 10;
-        var sprite = "spr_enemy";
-        var name = "Bob";
+        var enemyHealth = 100; // TODO: Request from backend. 
+        var enemyValue = 10; // TODO: Request from backend. 
+        var sprite = "spr_enemy"; // TODO: Request from backend. 
+        var name = "Bob"; // TODO: Request from backend. 
 
-        enemyHealth = (enemyHealth * (1 + (enemyHealthMult * this.currentLevel) + ((0.45 + enemyHealthMult) * (this.currentAddon - 1))));
-        enemyValue = enemyValue * (1 + (enemyValueMult * this.currentLevel) * ((0.35 + enemyValueMult) * (this.currentAddon - 1)));
+        enemyHealth = (enemyHealth * (1 + (enemyHealthMult * level) + (Game.ADDON_HEALTH_MULTIPLIER * (addon - 1))));
+        enemyValue = enemyValue * (1 + (enemyValueMult * level) * (Game.ADDON_VALUE_MULTIPLIER * (addon - 1)));
         enemyHealth = Math.round(enemyHealth);
         enemyValue = Math.round(enemyValue);
         this.nextEnemy = { 
@@ -84,8 +91,8 @@ Crafty.defineScene("Scene_Debug", function()
 
     Game.loadGame = function(authToken, callback) {
         var gameState = {
-            player: { name: "Bernd", gold: 100, damage: 10 },
-            level: 3,
+            player: { name: "Bernd", gold: 100, damage: 50 },
+            level: 8,
             addon: 2,
             companions: [
                 { name: "Gottfried", damage: 10, speed: 1, addon: 1 }
