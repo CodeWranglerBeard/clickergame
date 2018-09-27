@@ -27,21 +27,41 @@ Crafty.defineScene("Scene_Game", function()
     };
 
     /**
-    * Updates the gold text display. 
+    * Updates the shown gold text. 
     */
     var updateGoldDisplayed = function() {
         textGold.text("Gold: " + Game.player.gold);
     };
 
     /**
-    * Updates the addon and level text display. 
+    * Updates the shown addon and level text. 
     */
     var updateAddonLevelDisplayed = function() {
-        textAddonLevel.text("Addon: " + Game.currentAddon + " Level: " + Game.currentLevel);
+        if (Game.isEndless) {
+            textAddonLevel.text("(Endlosmodus) Level: " + Game.currentLevel);
+        } else {
+            textAddonLevel.text("Addon: " + Game.currentAddon + " Level: " + Game.currentLevel);
+        }
     };
 
     /**
-    * Updates the currently displayed enemy name. 
+    * Updates the shown player name. 
+    */
+    var updatePlayerDisplayed = function() {
+        var name = Game.player.name;
+        var text = name;
+
+        if (name.endsWith("s")) {
+            text += "' ";
+        } else {
+            text += "'s "
+        }
+        text += "Abenteuer";
+        textPlayerName.text(text);
+    };
+
+    /**
+    * Updates the shown enemy name. 
     */
     var updateEnemyName = function() {
         var textToShow = currentEnemy.name;
@@ -155,10 +175,10 @@ Crafty.defineScene("Scene_Game", function()
     textEnemyName.css("text-align", "center");
     textEnemyName.setLocation(
         0, 
-        WINDOW_HEIGHT - panelInfo.w
+        10
     );
     textEnemyName.css("color", "#f4f4d4");
-    z = textEnemyName.setZ(z);
+    textEnemyName.setZ(750);
 
     // Health bar
     var lifebarEnemy = Crafty.e("LifeBar");
@@ -167,7 +187,19 @@ Crafty.defineScene("Scene_Game", function()
         (panelEnemy.w - lifebarEnemy.w) / 2, 
         textEnemyName.y + textEnemyName.h + 10
     );
-    z = lifebarEnemy.setZ(z);
+    lifebarEnemy.setZ(750);
+
+    // Player name
+    var textPlayerName = Crafty.e("GameText");
+    textPlayerName.text("NAMENLOS");
+    textPlayerName.attr({ w: panelInfo.h });
+    textPlayerName.css("text-align", "center");
+    textPlayerName.setLocation(
+        0, 
+        WINDOW_HEIGHT - panelInfo.w
+    );
+    textPlayerName.css("color", "#f4f4d4");
+    z = textPlayerName.setZ(z);
 
     // Addon, level
     var textAddonLevel = Crafty.e("GameText");
@@ -175,8 +207,8 @@ Crafty.defineScene("Scene_Game", function()
     textAddonLevel.attr({ w: panelInfo.h, h: 25 });
     textAddonLevel.css("text-align", "left");
     textAddonLevel.setLocation(
-        10, 
-        WINDOW_HEIGHT - textAddonLevel.h - 10
+        30, 
+        WINDOW_HEIGHT - textAddonLevel.h - 30
     );
     textAddonLevel.css("color", "#f4f4d4");
     z = textAddonLevel.setZ(z);
@@ -187,7 +219,7 @@ Crafty.defineScene("Scene_Game", function()
     textGold.attr({ w: panelInfo.h, h: 25 });
     textGold.css("text-align", "left");
     textGold.setLocation(
-        10, 
+        30, 
         textAddonLevel.y - textGold.h - 10
     );
     textGold.css("color", "#f4f4d4");
@@ -239,9 +271,30 @@ Crafty.defineScene("Scene_Game", function()
     panelStore.hoverLocation = { 
         x: panelStore.initialLocation.x - 40, 
         y: panelStore.initialLocation.y 
-    };    
+    };
+    this.bind("OnPanelMoveFull", function(e) {
+        if (e != panelStore) {
+            return;
+        }
+
+        textGold.visible = false;
+        textAddonLevel.visible = false;
+        textEnemyName.visible = false;
+        textPlayerName.visible = false;
+    });
+    this.bind("OnPanelMoveHover", function(e) {
+        if (e != panelStore) {
+            return;
+        }
+
+        textGold.visible = true;
+        textAddonLevel.visible = true;
+        textEnemyName.visible = true;
+        textPlayerName.visible = true;
+    });
 
     showEnemy(Game.currentEnemy);
     updateGoldDisplayed();
     updateAddonLevelDisplayed();
+    updatePlayerDisplayed();
 });

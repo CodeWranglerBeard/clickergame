@@ -107,6 +107,7 @@ Crafty.defineScene("Scene_Register", function()
                     textFieldPass.text("");
                     textFieldPassConfirm.text("");
                     buttonConfirm.enabled(true);
+                    window.alert("Benutzername bereits vergeben. Wählen Sie einen anderen Namen.");
                 }
             }
         );

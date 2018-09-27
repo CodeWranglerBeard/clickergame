@@ -42,8 +42,8 @@ interfaces.CFocusable = function()
                 */
                 this.loseFocus = function() {
                     if (this.hasFocus) {
-                        console.log("Lost focus:");
-                        console.log(this);
+                        Crafty.trigger("OnLostFocus", this);
+                        if (DEBUG) { console.log("lost focus"); }
                     }
 
                     this.hasFocus = false;
@@ -57,13 +57,17 @@ interfaces.CFocusable = function()
                 * @public
                 */
                 this.getFocus = function() {
-                    Crafty("CFocusable").each(function() {
+                    var _this = this;
+                    Crafty("CFocusable").each(function(_this) {
+                        if (this == _this) {
+                            return;
+                        }
                         this.loseFocus();
                     });
 
                     this.hasFocus = true;
-                    console.log("Gained focus:");
-                    console.log(this);
+                    if (DEBUG) { console.log("got focus"); }
+                    Crafty.trigger("OnGotFocus", this);
                 };
             }
         },

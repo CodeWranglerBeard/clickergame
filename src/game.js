@@ -46,6 +46,9 @@ Game = {
     // List of currently active companions. 
     companions: [],
 
+    // List of currently active companion upgrades. 
+    companionUpgrades: [],
+
     // List of purchasable companions. 
     companionsInStore: [],
 
@@ -72,7 +75,7 @@ Game = {
 
     /**
     * The current player. 
-    * Object in the format { name: {String}, gold: {Number}, damage: {Number}, companions: {Array} }.
+    * Object in the format { name: {String}, gold: {Number}, damage: {Number} }.
     */
     player: undefined,
 
@@ -86,6 +89,89 @@ Game = {
         Crafty.background("#7c7c7c");
 
         Crafty.enterScene("Scene_Loading");
+    },
+
+    /**
+    * Returns a list of the names of the active companions. 
+    */
+    getCompanions: function() 
+    {
+        var names = [];
+
+        for (var i = 0; i < Game.companions.length; i++) {
+            names.push(Game.companions[i].name);
+        };
+
+        return names;
+    },
+
+    /**
+    * Returns a list of active upgrades. 
+    */
+    getUpgrades: function() 
+    {
+        var upgrades = [];
+
+        for (var i = 0; i < Game.upgrades.length; i++) {
+            upgrades.push({
+                Name: Game.upgrades[i].name,
+                Cost: Game.upgrades[i].cost,
+                BonusGold: Game.upgrades[i].bonusGold,
+                BonusDamage: Game.upgrades[i].bonusDamage
+            });
+        };
+
+        return upgrades;
+    },
+
+    /**
+    * Returns an object representing the current game state. 
+    */
+    getGameState: function()
+    {
+        return {
+            Player: Game.player.name,
+            Level: Game.currentLevel,
+            Addon: Game.currentAddon,
+            Companions: Game.getCompanions(),
+            Upgrades: Game.getUpgrades(),
+            Enemy: Game.currentEnemy,
+            EnemyNext: Game.nextEnemy
+        };
+    },
+
+    /**
+    * Applies the given game state representing object. 
+    * @param {Object} data - The game state representing object. 
+    */
+    setGameState: function(data)
+    {
+        // Clear existing data. 
+        Game.companions = [];
+        Game.upgrades = [];
+
+        // Apply new data. 
+        Game.player = { 
+            name: data.player.name, 
+            gold: data.player.gold, 
+            damage: data.player.damage 
+        };
+        Game.currentLevel = data.level;
+        Game.currentAddon = data.addon;
+        Game.currentEnemy = data.enemy;
+        Game.nextEnemy = data.enemyNext;
+
+        for (var i = 0; i < data.companions.length; i++) {
+            Game.companions.push(data.companions[i]);
+        };
+
+        for (var i = 0; i < data.upgrades.length; i++) {
+            Game.upgrades.push(data.upgrades[i]);
+        };
+
+        for (var i = 0; i < data.companionUpgrades.length; i++) {
+            Game.companionUpgrades.push(data.companionUpgrades[i]);
+        };
     },
 
     /**
@@ -104,6 +190,8 @@ Game = {
         if (this.currentAddon > this.addons.length) { // Begin endless mode. 
             this.isEndless = true;
         }
+
+        Game.saveGame();
     },
 
     /**
@@ -161,15 +249,17 @@ Game = {
             enemyValueMult = 0.8;
         }
 
-        // $.ajax({
-        //     url: "..\\clicker\\register.php",
-        //     type: "POST",
-        //     contentType : "application/json",
-        //     data: JSON.stringify({
-        //         Username: name,
-        //         Password: pass
-        //     }),
-        //     success: function(result) {
+        $.ajax({
+            url: "..\\clicker\\getNewEnemy.php",
+            type: "POST",
+            contentType : "application/json",
+            data: JSON.stringify({
+                AuthToken: Game.authToken,
+                Type: enemyType,
+                Addon: Game.currentAddon,
+                Level: Game.currentLevel
+            }),
+            success: function(result) {
                 var enemyHealth = 100; // TODO: Request from backend. 
                 var enemyValue = 10; // TODO: Request from backend. 
                 var sprite = "spr_enemy"; // TODO: Request from backend. 
@@ -189,40 +279,71 @@ Game = {
                 if (typeof callback !== 'undefined') {
                     callback({ status: "success" });
                 }
-            // }
-        // });        
+            },
+            fail: function() {
+                console.error("getNewEnemy: Request failed!");
+            }
+        });        
     },
 
     /**
-    * Retrieves the game data, using the given authToken. 
-    * @param {String} authToken - An authentication token to 
-    * use for backend requests. 
+    * Retrieves the game data from the server. 
     * @param {Function} callback - Optional: A callback for when the 
     * operation completes. 
     */
-    loadGame: function(authToken, callback)
+    loadGame: function(callback)
     {
-        // TODO
-        if (typeof callback !== 'undefined') {
-            callback({ status: "success" });
-        }
+        $.ajax({
+            url: "..\\clicker\\loadGame.php",
+            type: "POST",
+            contentType : "application/json",
+            data: JSON.stringify({
+                AuthToken: Game.authToken,
+                Username: Game.player.name
+            }),
+            success: function(result) {
+                Game.setGameState(result);
+
+                if (typeof callback !== 'undefined') {
+                    callback({ status: "success" });
+                }
+            },
+            fail: function() {
+                console.error("loadGame: Request failed!");
+                if (typeof callback !== 'undefined') {
+                    callback({ status: "fail" });
+                }
+            }
+        }); 
     },
 
     /**
-    * Sends the given game data to the backend for saving. 
-    * @param {Object} data - A json object representing 
-    * the game data to save. 
-    * @param {String} authToken - An authentication token to 
-    * use for backend requests. 
+    * Sends the given game data to the server for saving. 
     * @param {Function} callback - Optional: A callback for when the 
     * operation completes. 
     */
-    saveGame: function(data, authToken, callback)
+    saveGame: function(callback)
     {
-        // TODO
-        if (typeof callback !== 'undefined') {
-            callback({ status: "success" })
-        }
+        $.ajax({
+            url: "..\\clicker\\saveGame.php",
+            type: "POST",
+            contentType : "application/json",
+            data: JSON.stringify({
+                AuthToken: Game.authToken,
+                GameState: Game.getGameState()
+            }),
+            success: function(result) {
+                if (typeof callback !== 'undefined') {
+                    callback({ status: "success" });
+                }
+            },
+            fail: function() {
+                console.error("saveGame: Request failed!");
+                if (typeof callback !== 'undefined') {
+                    callback({ status: "fail" });
+                }
+            }
+        }); 
     },
 
     /**
@@ -247,9 +368,6 @@ Game = {
                 if (typeof callback !== 'undefined') {
                     callback({ status: "success" });
                 }
-            },
-            complete: function(jqXHR, textStatus) {
-                console.log("completed");
             },
             fail: function() {
                 if (typeof callback !== 'undefined') {
@@ -282,9 +400,6 @@ Game = {
                 if (typeof callback !== 'undefined') {
                     callback({ status: "success" });
                 }
-            },
-            complete: function(jqXHR, textStatus) {
-                console.log("completed");
             },
             fail: function() {
                 if (typeof callback !== 'undefined') {

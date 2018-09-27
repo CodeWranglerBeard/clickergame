@@ -118,8 +118,10 @@ Crafty.c("GameInterpPanel",
 
             if (this.fullMove) {
                 this.interpTarget = EInterpLocations.EFull;
+                Crafty.trigger("OnPanelMoveFull", this);
             } else {
                 this.interpTarget = EInterpLocations.EHover;
+                Crafty.trigger("OnPanelMoveHover", this);
             }
         };
 

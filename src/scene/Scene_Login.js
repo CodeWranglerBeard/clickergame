@@ -84,6 +84,8 @@ Crafty.defineScene("Scene_Login", function()
                     Game.loadGame(Game.authToken, function(data) {
                         Crafty.enterScene("Scene_Game");
                     });
+                } else {
+                    window.alert("Ungültige Anmeldeinformationen. Probieren Sie es bitte erneut.")
                 }
             }
         );
