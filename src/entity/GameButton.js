@@ -6,7 +6,8 @@ Crafty.c("GameButton",
 {
     init: function()
     {
-        this.textOffsetMult = { w: 0.25, h: 0.2};
+        // Vertical offset multiplier for the text to display. 
+        this.textOffsetMult = 0.2;
 
         this.requires("CBase, Mouse, CFocusable");
         this.attr({ w: 260, h: 70 });
@@ -23,9 +24,10 @@ Crafty.c("GameButton",
         this.textComp = Crafty.e("CBase");
         this.textComp.requires("DOM, Text");
         this.textComp.textFont($text_css);
+        this.textComp.css("text-align", "center");
         this.textComp.attr({
-            x: this.x + (this.w * this.textOffsetMult.w),
-            y: this.y + (this.h * this.textOffsetMult.h),
+            x: this.x,
+            y: this.y + (this.h * this.textOffsetMult),
             w: this.w, 
             h: this.h
         });
@@ -70,8 +72,8 @@ Crafty.c("GameButton",
             this.attr({ x: x, y: y });
             this.sprite.attr({ x: this.x, y: this.y });
             this.textComp.setLocation(
-                this.x + (this.w * this.textOffsetMult.w),
-                this.y + (this.h * this.textOffsetMult.h)
+                this.x,
+                this.y + (this.h * this.textOffsetMult)
             );
         };
 
@@ -85,8 +87,8 @@ Crafty.c("GameButton",
             });
             this.sprite.attr({ w: this.w, h: this.h });
             this.textComp.setSize(
-                (this.w / 100) * this.textOffsetMult.w,
-                (this.h / 100) * this.textOffsetMult.h
+                this.w,
+                (this.h / 100) * this.textOffsetMult
             );
         };
 

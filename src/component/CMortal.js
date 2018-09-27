@@ -54,9 +54,11 @@ interfaces.CMortal = function()
                 */
                 this.die = function() {
                     if (this.isImmortal == false) {
-                        this.destroy();
+                        if (!this.isDead) { // Prevent re-trigger. 
+                            Crafty.trigger("OnDeath", this);
+                        }
                         this.isDead = true;
-                        Crafty.trigger("OnDeath", this);
+                        this.destroy();
                     }
                 };
             }

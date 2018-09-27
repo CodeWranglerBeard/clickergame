@@ -12,7 +12,11 @@ Crafty.defineScene("Scene_Register", function()
     var margin = 15;
 
     /**********
-    * UI_ELEMENTS
+    * SCENE_FUNCS
+    **********/
+
+    /**********
+    * INITIALIZATION
     **********/
 
     var panel = Crafty.e("2D, Canvas, spr_panel_plain");

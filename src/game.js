@@ -60,15 +60,21 @@ Game = {
 
     /**
     * The information about the current enemy. 
-    * Object in the format { health: {Number}, value: {Number}, type: {EEnemyType}, sprite: {String}, name: {String} }
+    * Object in the format { health: {Number}, value: {Number}, type: {EEnemyType}, sprite: {String}, name: {String} }.
     */ 
     currentEnemy: undefined,
 
     /**
     * The information about the next enemy, after the current is defeated. . 
-    * Object in the format { health: {Number}, value: {Number}, type: {EEnemyType}, sprite: {String}, name: {String} }
+    * Object in the format { health: {Number}, value: {Number}, type: {EEnemyType}, sprite: {String}, name: {String} }.
     */ 
     nextEnemy: undefined,
+
+    /**
+    * The current player. 
+    * Object in the format { name: {String}, gold: {Number}, damage: {Number}, companions: {Array} }.
+    */
+    player: undefined,
 
     /**
     * Initializes and starts the game. 
@@ -88,15 +94,15 @@ Game = {
     */
     advanceLevel: function()
     {
-        currentLevel += 1;
+        this.currentLevel += 1;
 
-        if (currentLevel > addons[currentAddon - 1]) { // Advance addon. 
-            currentAddon += 1;
-            currentLevel = 1;
+        if (this.currentLevel > this.addons[this.currentAddon - 1]) { // Advance addon. 
+            this.currentAddon += 1;
+            this.currentLevel = 1;
         }
 
-        if (currentAddon > addons.length) { // Begin endless mode. 
-            isEndless = true;
+        if (this.currentAddon > this.addons.length) { // Begin endless mode. 
+            this.isEndless = true;
         }
     },
 
@@ -104,22 +110,30 @@ Game = {
     * Gets a new current and next enemy. 
     * Getting the next enemy is asynchronous. 
     */
-    advanceEnemy: function()
+    advanceEnemy: function(callback)
     {
-        if (typeof this.nextEnemy === 'undefined') {
-            this.getNewEnemy();
-        }
-
-        if (typeof this.currentEnemy !== 'undefined') {
-            this.currentEnemy = undefined;
-        }
-        this.currentEnemy = this.nextEnemy;
-        this.getNewEnemy();
-        if (DEBUG) { 
-            console.log("currentEnemy"); 
-            console.log(this.currentEnemy); 
-            console.log("nextEnemy"); 
-            console.log(this.nextEnemy); 
+        if (typeof Game.nextEnemy === 'undefined') {
+            Game.getNewEnemy(function(data) {
+                if (data.status == "success") {
+                    Game.currentEnemy = Game.nextEnemy;
+                    Game.getNewEnemy(callback);
+                    if (DEBUG) { 
+                        console.log("currentEnemy"); 
+                        console.log(Game.currentEnemy); 
+                        console.log("nextEnemy"); 
+                        console.log(Game.nextEnemy); 
+                    }
+                }
+            });
+        } else {
+            Game.currentEnemy = Game.nextEnemy;
+            Game.getNewEnemy(callback);
+            if (DEBUG) { 
+                console.log("currentEnemy"); 
+                console.log(Game.currentEnemy); 
+                console.log("nextEnemy"); 
+                console.log(Game.nextEnemy); 
+            }
         }
     },
 
@@ -133,17 +147,17 @@ Game = {
         var enemyHealthMult = 0.05;
         var enemyValueMult = 0.1;
 
-        if (this.currentLevel % 10 == 0) { // Mini boss level. 
+        if ((this.currentLevel + 1) % 10 == 0) { // Mini boss level. 
             enemyType = EEnemyTypes.MiniBoss;
-        } else if (this.currentLevel >= this.addons[this.currentAddon - 1]) { // Final level of addon. 
+        } else if ((this.currentLevel + 1) >= this.addons[this.currentAddon - 1]) { // Final level of addon. 
             enemyType = EEnemyTypes.FinalBoss;
         }
 
         if (enemyType == EEnemyTypes.MiniBoss) {
-            enemyHealthMult = 1.25;
+            enemyHealthMult = 0.75;
             enemyValueMult = 0.3;
         } else if (enemyType == EEnemyTypes.FinalBoss) {
-            enemyHealthMult = 2;
+            enemyHealthMult = 1.15;
             enemyValueMult = 0.8;
         }
 

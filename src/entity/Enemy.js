@@ -39,7 +39,7 @@ Crafty.c("Enemy",
             }
 
             return z;
-        }
+        };
 
         /**
         * Sets the currently displayed sprite. 
@@ -53,6 +53,6 @@ Crafty.c("Enemy",
             this.sprite.requires("Canvas, " + sprite);
             this.sprite.attr({ w: this.w, h: this.h });
             this.attach(this.sprite);
-        }
+        };
     },
 });

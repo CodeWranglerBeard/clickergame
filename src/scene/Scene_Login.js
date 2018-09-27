@@ -12,10 +12,14 @@ Crafty.defineScene("Scene_Login", function()
     var margin = 15;
 
     /**********
-    * UI_ELEMENTS
+    * SCENE_FUNCS
     **********/
 
-    var panel = Crafty.e("2D, Canvas, spr_panel_plain");
+    /**********
+    * INITIALIZATION
+    **********/
+
+    var panel = Crafty.e("CBase, Canvas, spr_panel_plain");
     panel.attr({ 
         x: (WINDOW_WIDTH - 370) / 2, 
         y: (WINDOW_HEIGHT - 545) / 2, 

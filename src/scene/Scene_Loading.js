@@ -29,6 +29,7 @@ Crafty.defineScene("Scene_Loading", function()
             "assets/small_side_panel_plain.png",
             "assets/small_side_panel_sheet.png",
             "assets/button_mini_sheet.png",
+            "assets/enemy.jpg",
         ], function() // Things to do after all files have been loaded
         {
     
@@ -102,12 +103,12 @@ Crafty.defineScene("Scene_Loading", function()
             spr_button_mini_sheet: [0, 0]
         });
         // ---- enemy ---- //
-        Crafty.sprite(300, 426, "assets/enemy.png", {
+        Crafty.sprite(300, 426, "assets/enemy.jpg", {
             spr_enemy: [0, 0]
         });
 
         if (DEBUG) {
-            Crafty.enterScene("Scene_Game");
+            Crafty.enterScene("Scene_Debug");
         } else {
             Crafty.enterScene("Scene_Login");
         }
