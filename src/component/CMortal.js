@@ -1,4 +1,3 @@
-// Include namespaces. 
 var interfaces = interfaces || {}; 
 
 /**
@@ -11,30 +10,41 @@ interfaces.CMortal = function()
     {
         init: function() 
         {
-            /**
-            * @desc If true, the entity can not die. 
-            * @memberof interfaces.CMortal
-            * @public
-            */
-            this.isImmortal = false;
-            /**
-            * @desc Maximum health the entity can have. 
-            * @memberof interfaces.CMortal
-            * @public 
-            */
-            this.healthMax = 1;
-            /**
-            * @desc Amount of remaining health. 
-            * @memberof interfaces.CMortal
-            * @private
-            */
-            this.health = 1;
-            /**
-            * @desc Becomes true upon death. 
-            * @memberof interfaces.CMortal
-            * @private
-            */
-            this.isDead = false;
+            if (typeof this.isImmortal === 'undefined') {
+                /**
+                * @desc If true, the entity can not die. 
+                * @memberof interfaces.CMortal
+                * @public
+                */
+                this.isImmortal = false;
+            }
+
+            if (typeof this.healthMax === 'undefined') {
+                /**
+                * @desc Maximum health the entity can have. 
+                * @memberof interfaces.CMortal
+                * @public 
+                */
+                this.healthMax = 1;
+            }
+
+            if (typeof this.health === 'undefined') {
+                /**
+                * @desc Amount of remaining health. 
+                * @memberof interfaces.CMortal
+                * @private
+                */
+                this.health = 1;
+            }
+
+            if (typeof this.isDead === 'undefined') {
+                /**
+                * @desc Becomes true upon death. 
+                * @memberof interfaces.CMortal
+                * @private
+                */
+                this.isDead = false;
+            }
 
             if (typeof this.die === 'undefined') {
                 /**

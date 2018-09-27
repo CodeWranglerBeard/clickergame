@@ -1,4 +1,3 @@
-// Include namespaces. 
 var interfaces = interfaces || {}; 
 
 /**
